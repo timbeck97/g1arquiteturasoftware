@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: service2
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/realms/timbeck/protocol/openid-connect/certs
+
+server:
+  port: 8082
+  servlet:
+    context-path: /service1
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:9091/eureka}
