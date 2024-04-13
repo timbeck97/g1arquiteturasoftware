@@ -1,22 +1,37 @@
 services:
   keycloak:
+    #necessario rodar com img buildada local do keycloack para importar realm, pois nao tem como faer isso com a img pronta
     container_name: keycloak
     hostname: keycloak
-    image: quay.io/keycloak/keycloak:24.0.2
+    image: keycloacklocal
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm-export.json
     volumes:
-      - ./imports/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./imports:/opt/jboss/keycloak/imports
     ports:
       - "8080:8080"
     restart: always
     command:
-      [ "start-dev","--import-realm"]
+      [ "start-dev"]
+
     networks:
       - timnetwork
-
+  authorizationserver:
+    container_name: authorizationserver
+    hostname: authorizationserver
+    image: authorizationserver
+    build:
+      context: ./authorizationserver
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - timnetwork
   eurekaserver:
     image: eurekaserver
     container_name: eurekaserver
@@ -42,7 +57,7 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - keycloak
+      - authorizationserver
     networks:
       - timnetwork
     environment:
@@ -66,12 +81,12 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - keycloak
+      - authorizationserver
     networks:
       - timnetwork
     environment:
       eureka.client.service-url.defaultZone: http://eurekaserver:9091/eureka
-      URL_AUTH: http://keycloak
+      URL_AUTH: http://authorizationserver
   service2:
     container_name: service2
     hostname: service2
@@ -84,11 +99,11 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - keycloak
+      - authorizationserver
     networks:
       - timnetwork
     environment:
       eureka.client.service-url.defaultZone: http://eurekaserver:9091/eureka
-      URL_AUTH: http://keycloak
+      URL_AUTH: http://authorizationserver
 networks:
   timnetwork:

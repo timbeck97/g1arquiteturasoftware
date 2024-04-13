@@ -10,12 +10,14 @@
         <module name="apigateway" />
         <module name="eurekaserver" />
         <module name="service1" />
+        <module name="authorizationserver" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="apigateway" options="-parameters" />
+      <module name="authorizationserver" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
       <module name="service1" options="-parameters" />
       <module name="service2" options="-parameters" />

@@ -1,0 +1,77 @@
+server:
+  port: 8081
+
+
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${URL_AUTH:http://localhost:8080}/auth/oauth2/jwks
+      client:
+        registration:
+          gateway:
+            client-id: g1arquitetura
+            client-secret: 123456
+            authorization-grant-type: authorization_code
+            scope: openid
+            redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          gateway:
+            authorizationUri: authmodule/auth/oauth2/authorize
+            tokenUri: authmodule/auth/oauth2/token
+            userNameAttribute: user_fullname
+
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay=
+      routes:
+        - id: sevice1module
+          uri: http://127.0.0.1:8081/
+          predicates:
+            - Path=/service1/**
+        - id: sevice2module
+          uri: http://127.0.0.1:8082/
+          predicates:
+            - Path=/service2/**
+        - id: authmodule
+          uri: http://127.0.0.1:8080/
+          predicates:
+            - Path=/auth/**
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:9091/eureka
+    instance:
+      hostname: http://localhost
+
+#spring.security.oauth2:
+#  resourceserver:
+#    jwt:
+#      jwk-set-uri: ${URL_AUTH:http://localhost}:8080/realms/timbeck/protocol/openid-connect/certs
+#  client:
+#    provider:
+#      keycloak:
+#        issuer-uri: ${URL_AUTH:http://localhost}:8080/realms/timbeck
+#    registration:
+#      spring-with-test-scope:
+#        provider: keycloak
+#        client-id: timbeck-openid
+#        authorization-grant-type: authorization_code
+#        scope: openid
+#spring.security.oauth2:
+#  resourceserver:
+#    jwt:
+#      issuer-uri: ${URL_AUTH:http://localhost:8080}
+#      jwk-set-uri: ${URL_AUTH:http://localhost:8080}/oauth2/jwks
+

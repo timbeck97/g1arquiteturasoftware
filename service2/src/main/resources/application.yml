@@ -5,12 +5,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${URL_AUTH:http://localhost}:8080/realms/timbeck/protocol/openid-connect/certs
+          issuer-uri: ${URL_AUTH:http://localhost:8080}
+          jwk-set-uri: ${URL_AUTH:http://localhost:8080}/oauth2/jwks
 
 server:
   port: 8083
   servlet:
-    context-path: /service1
+    context-path: /service2
 eureka:
   client:
     service-url:

@@ -1,0 +1,31 @@
+spring:
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/jwt
+    driverClassName: org.postgresql.Driver
+  jpa:
+    show-sql: 'true'
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+
+#  session:
+#    store-type: jdbc
+server:
+  port: 8080
+  servlet:
+    context-path: /auth
+
+
+auth:
+  provider-uri: "http://localhost:8080/auth"
+  jks:
+    keypass: 123456
+    storepass: 123456
+    alias: authserver
+    path: keystore/authserver.jks

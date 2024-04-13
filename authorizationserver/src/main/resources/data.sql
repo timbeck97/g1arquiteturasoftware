@@ -1,0 +1,1 @@
+insert into user_entity(id, created_at, email, name, password, type) values (1, '2019-01-01 00:00:00', 'admin', 'admin', '$2a$10$61QlY.XrV328WG97W7V/ZObfUSCJ.5mirAxM7lnoVyYW3qyu2rs4.', 'ADMIN');
