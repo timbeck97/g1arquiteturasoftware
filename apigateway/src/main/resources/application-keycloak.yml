@@ -7,7 +7,7 @@ spring:
     name: GATEWAY-SERVICE
   data:
     redis:
-      host: localhost
+      host: ${URL_REDIS:localhost}
       port: 6379
   security:
     oauth2:
@@ -21,8 +21,8 @@ spring:
         registration:
           spring-with-test-scope:
             provider: keycloak
-            client-id: arquitetura_client
-            clientSecret: NOKtorbenz86ixRhtb3x6b9H5KjgMFju
+            client-id: ${CLIENT_ID:arquitetura_client}
+            clientSecret: ${CLIENT_SECRET:123456}
             authorization-grant-type: authorization_code
             scope: openid
 
@@ -30,7 +30,7 @@ spring:
     gateway:
       routes:
         - id: sevice1module
-          uri: http://127.0.0.1:8082/
+          uri: ${URL_SERVICE1:http://127.0.0.1:8082/}
           predicates:
             - Path=/service1/**
           filters:
@@ -41,13 +41,17 @@ spring:
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@KeyResolverConfiguration}"
         - id: sevice2module
-          uri: http://127.0.0.1:8083/
+          uri: ${URL_SERVICE2:http://127.0.0.1:8083/}
           predicates:
             - Path=/service2/**
-        - id: authmodule
-          uri: http://127.0.0.1:8080/
-          predicates:
-            - Path=/auth/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 2
+                redis-rate-limiter.burstCapacity: 5
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@KeyResolverConfiguration}"
+
 
 eureka:
   client:

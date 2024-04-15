@@ -1,4 +1,18 @@
-FROM openjdk:17
+FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
-COPY target/service1-0.0.1-SNAPSHOT.jar /app/service1.jar
-ENTRYPOINT ["java", "-jar", "service1.jar"]
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+COPY . .
+
+RUN mvn package
+
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY --from=build /app/target/service1-0.0.1-SNAPSHOT.jar  /app/service1.jar
+
+CMD ["java", "-jar", "service1.jar"]

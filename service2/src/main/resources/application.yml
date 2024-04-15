@@ -5,8 +5,9 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${URL_AUTH:http://localhost:8080}
-          jwk-set-uri: ${URL_AUTH:http://localhost:8080}/oauth2/jwks
+          #          issuer-uri: ${URL_AUTH:http://localhost:8080/auth}
+          #          jwk-set-uri: ${URL_AUTH:http://localhost:8080/auth}/oauth2/jwks
+          jwk-set-uri: ${URL_AUTH:http://localhost}:8080/realms/arquiteturag1/protocol/openid-connect/certs
 
 server:
   port: 8083

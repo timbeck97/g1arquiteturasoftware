@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +28,6 @@ public class RouteConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("sevice1module", r -> r.path("/service1/**")
-                        .filters(f -> f.filter(filterFactory.apply()))
 //                        .filters(f -> f.requestRateLimiter(c -> c
 //                                .setRateLimiter(redisRateLimiter())
 //                                .setKeyResolver(hostNameKeyResolver())))
@@ -50,10 +51,13 @@ public class RouteConfig {
 //    public RedisRateLimiter redisRateLimiter() {
 //        return new RedisRateLimiter(10, 20);
 //    }
-//    @Bean
-//    public KeyResolver hostNameKeyResolver() {
-//        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
-//    }
+
+
+
+
+
+
+
 //    @Bean
 //    public GatewayFilterFactory<RequestRateLimiterGatewayFilterFactory.Config> rateLimiterFilter() {
 //        return new RequestRateLimiterGatewayFilterFactory( redisRateLimiter(), hostNameKeyResolver()) {

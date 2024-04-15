@@ -1,6 +1,6 @@
 services:
   keycloak:
-    #necessario rodar com img buildada local do keycloack para importar realm, pois nao tem como faer isso com a img pronta
+    #necessario rodar com img buildada local do keycloack para importar realm, pois nao tem como FAZER isso com a img pronta
     container_name: keycloak
     hostname: keycloak
     image: keycloacklocal
@@ -20,18 +20,19 @@ services:
 
     networks:
       - timnetwork
-  authorizationserver:
-    container_name: authorizationserver
-    hostname: authorizationserver
-    image: authorizationserver
-    build:
-      context: ./authorizationserver
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    restart: always
-    networks:
-      - timnetwork
+#  AUTHORIZATION SERVER NAO SERA USADO INICIALMENTE POIS FOI OPTADO UTILIZAR O KEYCLOAK
+#  authorizationserver:
+#    container_name: authorizationserver
+#    hostname: authorizationserver
+#    image: authorizationserver
+#    build:
+#      context: ./authorizationserver
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    restart: always
+#    networks:
+#      - timnetwork
   eurekaserver:
     image: eurekaserver
     container_name: eurekaserver
@@ -57,18 +58,16 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - authorizationserver
+      - keycloak
     networks:
       - timnetwork
     environment:
+      spring.profiles.active: keycloak
       eureka.client.service-url.defaultZone: http://eurekaserver:9091/eureka
       URL_AUTH: http://keycloak
-      spring.cloud.gateway.routes[0].id: service1module
-      spring.cloud.gateway.routes[0].uri: http://service1:8082
-      spring.cloud.gateway.routes[0].predicates[0]: Path=/service1/**
-      spring.cloud.gateway.routes[1].id: service2module
-      spring.cloud.gateway.routes[1].uri: http://service2:8083
-      spring.cloud.gateway.routes[1].predicates[0]: Path=/service2/**
+      URL_REDIS: redis
+      URL_SERVICE1: http://service1:8082/
+      URL_SERVICE2: http://service2:8083/
   service1:
     container_name: service1
     hostname: service1
@@ -81,12 +80,12 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - authorizationserver
+      - keycloak
     networks:
       - timnetwork
     environment:
       eureka.client.service-url.defaultZone: http://eurekaserver:9091/eureka
-      URL_AUTH: http://authorizationserver
+      URL_AUTH: http://keycloak
   service2:
     container_name: service2
     hostname: service2
@@ -99,11 +98,20 @@ services:
     restart: always
     depends_on:
       - eurekaserver
-      - authorizationserver
+      - keycloak
     networks:
       - timnetwork
     environment:
       eureka.client.service-url.defaultZone: http://eurekaserver:9091/eureka
-      URL_AUTH: http://authorizationserver
+      URL_AUTH: http://keycloak
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - timnetwork
 networks:
   timnetwork:

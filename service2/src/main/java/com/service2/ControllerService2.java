@@ -15,7 +15,7 @@ public class ControllerService2 {
 
     @GetMapping("/message")
     public String test(Principal user) {
-        return "SERVICO 1";
+        return "SERVICO 2";
     }
 
     @PreAuthorize("hasRole('USER')")
