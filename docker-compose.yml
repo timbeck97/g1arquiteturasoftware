@@ -68,6 +68,8 @@ services:
       URL_REDIS: redis
       URL_SERVICE1: http://service1:8082/
       URL_SERVICE2: http://service2:8083/
+      CLIENT_ID: arquitetura_client
+      CLIENT_SECRET: 394GMzz6cfzk8tFZ4wRflzMQJXem37k1
   service1:
     container_name: service1
     hostname: service1
@@ -114,4 +116,4 @@ services:
     networks:
       - timnetwork
 networks:
-  timnetwork:
+  timnetwork: {}

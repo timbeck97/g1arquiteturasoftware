@@ -36,8 +36,8 @@ spring:
           filters:
             - name: RequestRateLimiter
               args:
-                redis-rate-limiter.replenishRate: 2
-                redis-rate-limiter.burstCapacity: 5
+                redis-rate-limiter.replenishRate: 2 #numero de requisicoes permitidas por sencundo
+                redis-rate-limiter.burstCapacity: 5 #
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@KeyResolverConfiguration}"
         - id: sevice2module
