@@ -69,7 +69,8 @@ services:
       URL_SERVICE1: http://service1:8082/
       URL_SERVICE2: http://service2:8083/
       CLIENT_ID: arquitetura_client
-      CLIENT_SECRET: 394GMzz6cfzk8tFZ4wRflzMQJXem37k1
+      CLIENT_SECRET: vcNuGKjK8SbhhOTI1G0DJsKCaR54iZBi
+      security.oauth2.client.provider.keycloak.redirect-uri: http://localhost:8081/login/oauth2/code/keycloak
   service1:
     container_name: service1
     hostname: service1
@@ -116,4 +117,5 @@ services:
     networks:
       - timnetwork
 networks:
-  timnetwork: {}
+  timnetwork:
+    driver: bridge

@@ -118,6 +118,7 @@ public class AuthSecurityConfig {
                 .scope("myuser:read")
                 .scope("myuser:write")
                 .scope("posts:write")
+                .scope("posts:read")
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .refreshTokenTimeToLive(Duration.ofDays(1))
